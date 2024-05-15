@@ -10,6 +10,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private double balance;
+    private int pin;
 
 
     @ManyToOne()
