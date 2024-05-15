@@ -22,7 +22,7 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     public Account getAccount(String username) {
-        log.info("Fetaching {} account", username);
+        log.info("Fetching {} account", username);
         return accountRepository.findAccountByMyUserUsername(username);
     }
 
@@ -31,4 +31,34 @@ public class AccountServiceImpl implements AccountService{
         log.info("Fetching all accounts");
         return accountRepository.findAll();
     }
+
+    public Account deposit (String username, double amount){
+        Account account = getAccount(username);
+        if (account == null){
+            throw new RuntimeException("Account not found");
+        }
+        account.setBalance(account.getBalance() + amount);
+        log.info("You deposited {}, your balance is {}", amount, account.getBalance());
+        return accountRepository.save(account);
+    }
+
+    public Account withdraw (String username, double amount){
+        Account account = getAccount(username);
+        if (account == null){
+            throw new RuntimeException("Account not found");
+        }
+        if (account.getBalance() < amount){
+            throw new RuntimeException("You dont have enough money to withdraw");
+        }
+        account.setBalance(account.getBalance() - amount);
+        log.info("You withdraw {}, your balance is {}", amount, account.getBalance());
+        return saveAccount(account);
+    }
+
+    public Account changePin (String username, int pin){
+        Account account = getAccount(username);
+        account.setPin(pin);
+        return saveAccount(account);
+    }
+
 }
