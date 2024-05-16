@@ -1,24 +1,23 @@
 package com.furmi.Bank.System.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
 
 @Entity
-@AllArgsConstructor
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Column(unique = true)
+    @JsonProperty("Username")
     private String username;
-    private String password1;
-    private String password2;
+    @JsonProperty("Password")
+    private String password;
+    @JsonProperty("Role")
+    private String role;
+    @JsonProperty("FullName")
     private String fullName;
-
-    @OneToMany(mappedBy = "myUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<Account> accountSet;
 }
