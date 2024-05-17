@@ -4,6 +4,7 @@ import com.furmi.Bank.System.model.Account;
 import com.furmi.Bank.System.service.AccountService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,13 +15,15 @@ import java.util.List;
 @AllArgsConstructor
 public class AccountController {
     AccountService accountService;
+
+
     @GetMapping("/admin/home")
     public String getAdminSettings(){
         return "Admin settings";
     }
     @GetMapping("/home")
     public String getHome(){
-        return "Home page for all";
+        return "Home page for all users";
     }
 
     @GetMapping("/{email}")
