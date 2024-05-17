@@ -26,7 +26,7 @@ public class SecurityConfiguration {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry ->{
-            registry.requestMatchers("/api/account/home", "/register/user").permitAll();
+            registry.requestMatchers("/api/account/home", "/register/**").permitAll();
             registry.requestMatchers("/api/account/admin/**").hasRole("ADMIN");
             registry.requestMatchers("/api/account/**").hasRole("USER");
             registry.anyRequest().authenticated();
