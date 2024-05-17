@@ -12,12 +12,7 @@ public class MyUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(unique = true)
-    @JsonProperty("Username")
     private String username;
-    @JsonProperty("Password")
     private String password;
-    @JsonProperty("Role")
     private String role;
-    @JsonProperty("FullName")
-    private String fullName;
 }
