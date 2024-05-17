@@ -14,11 +14,19 @@ import java.util.List;
 @AllArgsConstructor
 public class AccountController {
     AccountService accountService;
+    @GetMapping("/admin/home")
+    public String getAdminSettings(){
+        return "Admin settings";
+    }
+    @GetMapping("/home")
+    public String getHome(){
+        return "Home page for all";
+    }
 
     @GetMapping("/{email}")
-    public Account getById (@PathVariable String username){
-        log.info("Getting {} account", username);
-        return accountService.getAccount(username);
+    public Account getByEmail (@PathVariable String email){
+        log.info("Getting {} account", email);
+        return accountService.getAccount(email);
     }
 
     @GetMapping("/all")
