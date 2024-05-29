@@ -4,7 +4,6 @@ import com.furmi.Bank.System.model.Account;
 import com.furmi.Bank.System.service.AccountService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class AccountController {
     AccountService accountService;
-
 
     @GetMapping("/admin/home")
     public String getAdminSettings(){
@@ -45,8 +43,8 @@ public class AccountController {
     }
     @PostMapping("/create")
     public Account createAccount (@RequestBody Account account){
-        log.info("Created account");
-        return accountService.saveAccount(account);
+        log.info("Created account - {}", account.getAccountOwner());
+        return accountService.createAccount(account);
     }
 
     @PutMapping("/withdraw")
@@ -60,7 +58,7 @@ public class AccountController {
             throw new RuntimeException("You dont have enough money to withdraw");
         }
         account.setBalance(account.getBalance() - amount);
-        return accountService.saveAccount(account);
+        return accountService.createAccount(account);
     }
 
     @PutMapping("/deposit")
@@ -71,7 +69,7 @@ public class AccountController {
             throw new RuntimeException("Account not found");
         }
         account.setBalance(account.getBalance() + amount);
-        return accountService.saveAccount(account);
+        return accountService.createAccount(account);
     }
 
     @PutMapping("/pin")
@@ -79,6 +77,13 @@ public class AccountController {
         Account account = accountService.getAccount(email);
         account.setPin(newPin);
         log.info("Pin to {} account has been changed", account.getAccountOwner());
-        return accountService.saveAccount(account);
+        return accountService.createAccount(account);
+    }
+
+    @DeleteMapping
+    public void deleteAccount (@RequestParam String email){
+        Account account = accountService.getAccount(email);
+        log.info("Deleting {} account", account.getAccountOwner());
+        accountService.deleteAccount(email);
     }
 }

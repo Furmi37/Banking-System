@@ -2,10 +2,15 @@ package com.furmi.Bank.System.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
