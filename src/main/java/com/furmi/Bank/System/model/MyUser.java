@@ -6,7 +6,12 @@ import lombok.*;
 
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
