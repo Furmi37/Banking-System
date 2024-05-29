@@ -18,10 +18,10 @@ This project was made while I was learning programming.
 - JUnit5
 
 
-### Features
+### Features:
 Banking System Project - REST service. Service is authenticated so to use it you need to register, then login. You can create account and make operations with it like: withdraw money, deposit, change account pin code, change your personal informations. Registered users and accounts are saved to database.
 
-### Requirements
+### Requirements:
 - Java [17]
-- Maven
+- Maven 
 - Postman
