@@ -15,17 +15,17 @@ public class AccountService {
 
     AccountRepository accountRepository;
 
-    public Account saveAccount(Account account) {
+    public Account createAccount(Account account) {
         return accountRepository.save(account);
     }
 
     public Account getAccount(String email) {
-        Account account = accountRepository.findAccountByEmail(email);
-        if (account != null) {
-            return account;
-        } else {
-            throw new RuntimeException("This account doesnt have a owner yet");
-        }
+        return  accountRepository.findAccountByEmail(email);
+//        if (account != null) {
+//            return account;
+//        } else {
+//            throw new RuntimeException("This account doesnt have a owner yet");
+//        }
     }
 
     public List<Account> getAccounts() {
