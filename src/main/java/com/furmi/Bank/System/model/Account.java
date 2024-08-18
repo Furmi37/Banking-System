@@ -14,7 +14,7 @@ import lombok.*;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     @Column(unique = true)
     @JsonProperty("Account Owner")
     private String accountOwner;
