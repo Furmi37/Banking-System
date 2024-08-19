@@ -23,7 +23,7 @@ class AccountServiceTest {
     @Test
     void shouldCreateAccountWhenCallCreateAccount() {
         //given
-        Account account = new Account(1,"Monthy Python", "monthy@gmail.com", "867349934", 1000.0, 2345);
+        Account account = new Account(null,"Monthy Python", "monthy@gmail.com", "867349934", 1000.0, 2345);
         when(accountRepository.save(account)).thenReturn(account);
         //when
         Account save = accountRepository.save(account);
@@ -36,7 +36,7 @@ class AccountServiceTest {
     void shouldGetAccountWhenCallGetAccount() {
         //given
         String email= "monthy@gmail.com";
-        Account account = new Account(1,"Monthy Python", email, "867349934", 1000.0, 2345);
+        Account account = new Account(null,"Monthy Python", email, "867349934", 1000.0, 2345);
         when(accountRepository.findAccountByEmail(email)).thenReturn(account);
         //when
         Account account1 = accountService.getAccount(email);
@@ -57,8 +57,8 @@ class AccountServiceTest {
     @Test
     void shouldGetTwoAccountsWhenCallGetAccounts() {
         //given
-        Account account1 = new Account(1,"Monthy Python", "monthy@gmail.com", "867349934", 1000.0, 2345);
-        Account account2 = new Account(2,"Susan Wright", "susan@gmail.com", "546345654364", 2000.0, 1234);
+        Account account1 = new Account(null,"Monthy Python", "monthy@gmail.com", "867349934", 1000.0, 2345);
+        Account account2 = new Account(null,"Susan Wright", "susan@gmail.com", "546345654364", 2000.0, 1234);
         List<Account> accounts = List.of(account1,account2);
         when(accountRepository.findAll()).thenReturn(accounts);
         //when
@@ -85,7 +85,7 @@ class AccountServiceTest {
     void shouldDeleteAccountWhenCallDeleteAccount() {
         //given
         String email= "monthy@gmail.com";
-        Account account = new Account(1,"Monthy Python", email, "867349934", 1000.0, 2345);
+        Account account = new Account(null,"Monthy Python", email, "867349934", 1000.0, 2345);
         when(accountRepository.findAccountByEmail(email)).thenReturn(account);
         //when
         accountService.deleteAccount(email);
