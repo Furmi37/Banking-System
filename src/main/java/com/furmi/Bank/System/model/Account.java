@@ -16,15 +16,15 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(unique = true)
-    @JsonProperty("Account Owner")
+//    @JsonProperty("Account Owner")
     private String accountOwner;
-    @JsonProperty("Email")
+//    @JsonProperty("Email")
     private String email;
-    @JsonProperty("Account Number")
+//    @JsonProperty("Account Number")
     private String accountNumber;
-    @JsonProperty("Balance")
+//    @JsonProperty("Balance")
     private double balance;
-    @JsonProperty("Pin code")
+//    @JsonProperty("Pin code")
     private int pin;
 
 }
