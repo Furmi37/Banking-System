@@ -48,7 +48,8 @@ class AccountControllerTest {
     }
 
     @Test
-    void shouldGetAccountByEmail() throws Exception {
+    void shouldReturnOneAccountWhenCallGetAccountByEmail() throws Exception {
+
 
         when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
 
@@ -66,7 +67,8 @@ class AccountControllerTest {
     }
 
     @Test
-    void getAll() throws Exception {
+    void shouldReturnTwoAccountsWhenCallGetAll() throws Exception {
+
         List<Account> list = List.of(account,account1);
         when(accountService.getAccounts()).thenReturn(list);
 
@@ -88,11 +90,83 @@ class AccountControllerTest {
     }
 
     @Test
-    void checkBalance() {
+    void shouldReturnThousandValueWhenCallCheckBalance() throws Exception {
+    }
+
+    @Test
+    void shouldCallCreateAccountOnceWhenCreateAccount() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/account/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"1000\",\"pin\": \"1234\" }"))
+                .andExpect(status().isOk());
+
+        verify(accountService, times(1)).createAccount(eq(account));
+    }
+
+    @Test
+    void shouldCallCreateAccountWhenWithdrawMoney() throws Exception {
+        double amount = 500;
+        when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
+        account.setBalance(account.getBalance()-amount);
+        when(accountService.createAccount(account)).thenReturn(account);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/account/withdraw")
+                .param("email", "monthy@gmail.com")
+                .param("amount", String.valueOf(amount))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"500\",\"pin\": \"1234\" }"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.balance").value(account.getBalance()));
+
+        verify(accountService, times(1)).createAccount(account);
+    }
+
+    @Test
+    void shouldCallCreateAccountWhenDepositMoney() throws Exception {
+        double amount = 800;
+        when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
+        account.setBalance(account.getBalance()+amount);
+        when(accountService.createAccount(account)).thenReturn(account);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/account/deposit")
+                        .param("email", "monthy@gmail.com")
+                        .param("amount", String.valueOf(amount))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"1800\",\"pin\": \"1234\" }"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.balance").value(account.getBalance()));
+
+        verify(accountService, times(1)).createAccount(account);
+    }
+
+    @Test
+    void shouldCallCreateAccountWhenChangePin() throws Exception {
+        int pin = 4567;
+        when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
+        account.setPin(pin);
+        when(accountService.createAccount(account)).thenReturn(account);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/account/pin")
+                .param("email", "monthy@gmail.com")
+                .param("newPin", String.valueOf(pin))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"1800\",\"pin\": \"4567\" }"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.pin").value(account.getPin()));
+
+        verify(accountService,times(1)).createAccount(account);
 
     }
 
     @Test
+    void shouldCallDeleteAccountWhenDeleteAccount() throws Exception {
+        when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/account/delete")
+                .param("email", "monthy@gmail.com"));
+
+        verify(accountService, times(1)).deleteAccount("monthy@gmail.com");
+    }
+
     void createAccount() {
     }
 
