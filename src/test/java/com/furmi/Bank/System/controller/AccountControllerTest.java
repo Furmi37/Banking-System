@@ -50,6 +50,7 @@ class AccountControllerTest {
     @Test
     void shouldReturnOneAccountWhenCallGetAccountByEmail() throws Exception {
 
+
         when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/account/monthy@gmail.com"))
@@ -67,6 +68,7 @@ class AccountControllerTest {
 
     @Test
     void shouldReturnTwoAccountsWhenCallGetAll() throws Exception {
+
         List<Account> list = List.of(account,account1);
         when(accountService.getAccounts()).thenReturn(list);
 
@@ -89,22 +91,6 @@ class AccountControllerTest {
 
     @Test
     void shouldReturnThousandValueWhenCallCheckBalance() throws Exception {
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/account/balance"));
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.balance").value(1000))
-//                .andReturn();
-
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.accountOwner").value("Monthy Python"))
-//                .andExpect(jsonPath("$.email").value("monthy@gmail.com"))
-//                .andExpect(jsonPath("$.accountNumber").value("8933333321"))
-//                .andExpect(jsonPath("$.balance").value(1000))
-//                .andExpect(jsonPath("$.pin").value(1234))
-//                .andReturn();
-
     }
 
     @Test
@@ -179,6 +165,24 @@ class AccountControllerTest {
                 .param("email", "monthy@gmail.com"));
 
         verify(accountService, times(1)).deleteAccount("monthy@gmail.com");
+    }
 
+    void createAccount() {
+    }
+
+    @Test
+    void withdrawMoney() {
+    }
+
+    @Test
+    void depositMoney() {
+    }
+
+    @Test
+    void changePin() {
+    }
+
+    @Test
+    void deleteAccount() {
     }
 }
