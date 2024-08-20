@@ -80,7 +80,7 @@ public class AccountController {
         return accountService.createAccount(account);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete")
     public void deleteAccount (@RequestParam String email){
         Account account = accountService.getAccount(email);
         log.info("Deleting {} account", account.getAccountOwner());
