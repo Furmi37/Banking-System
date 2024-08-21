@@ -40,11 +40,6 @@ class AccountControllerTest {
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
     }
-    @BeforeEach
-    public void setUp(){
-        mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
-    }
-
     @Test
     void getAdminSettings() {
     }
@@ -109,8 +104,6 @@ class AccountControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/account/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"1000\",\"pin\": \"1234\" }"))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"1000\",\"pin\": \"1234\" }"))
                 .andExpect(status().isOk());
 
         verify(accountService, times(1)).createAccount(eq(account));
