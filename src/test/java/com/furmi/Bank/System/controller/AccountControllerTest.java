@@ -31,12 +31,17 @@ class AccountControllerTest {
     @InjectMocks
     private AccountController accountController;
     private MockMvc mockMvc;
+
     Account account = new Account(null, "Monthy Python", "monthy@gmail.com", "8933333321", 1000, 1234);
     Account account1 = new Account(null, "Barrack Obama", "barrack@gmail.com", "79822333321", 4000, 4321);
 
 
     @BeforeEach
     public void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
+    }
+    @BeforeEach
+    public void setUp(){
         mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
     }
 
@@ -50,7 +55,6 @@ class AccountControllerTest {
 
     @Test
     void shouldReturnOneAccountWhenCallGetAccountByEmail() throws Exception {
-
         when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/account/monthy@gmail.com"))
@@ -62,13 +66,12 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.balance").value(1000))
                 .andExpect(jsonPath("$.pin").value(1234))
                 .andReturn();
-
-
     }
 
     @Test
     void shouldReturnTwoAccountsWhenCallGetAll() throws Exception {
-        List<Account> list = List.of(account, account1);
+
+        List<Account> list = List.of(account,account1);
         when(accountService.getAccounts()).thenReturn(list);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/account/all"))
@@ -90,6 +93,7 @@ class AccountControllerTest {
 
     @Test
     void shouldReturnThousandValueWhenCallCheckBalance() throws Exception {
+
         when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/account/balance")
@@ -97,6 +101,7 @@ class AccountControllerTest {
                 .andExpect(status().isOk());
 
         assertEquals(1000, account.getBalance());
+
     }
 
     @Test
@@ -104,6 +109,8 @@ class AccountControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/account/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"1000\",\"pin\": \"1234\" }"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"1000\",\"pin\": \"1234\" }"))
                 .andExpect(status().isOk());
 
         verify(accountService, times(1)).createAccount(eq(account));
@@ -113,6 +120,7 @@ class AccountControllerTest {
     void shouldCallCreateAccountWhenWithdrawMoney() throws Exception {
         double amount = 500;
         when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
+
         account.setBalance(account.getBalance() - amount);
         when(accountService.createAccount(account)).thenReturn(account);
 
@@ -131,6 +139,7 @@ class AccountControllerTest {
     void shouldCallCreateAccountWhenDepositMoney() throws Exception {
         double amount = 800;
         when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
+
         account.setBalance(account.getBalance() + amount);
         when(accountService.createAccount(account)).thenReturn(account);
 
