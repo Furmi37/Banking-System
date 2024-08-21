@@ -31,14 +31,20 @@ class AccountControllerTest {
     @InjectMocks
     private AccountController accountController;
     private MockMvc mockMvc;
-    Account account = new Account(null, "Monthy Python", "monthy@gmail.com","8933333321",1000,1234);
-    Account account1 = new Account(null, "Barrack Obama", "barrack@gmail.com","79822333321",4000,4321);
+
+    Account account = new Account(null, "Monthy Python", "monthy@gmail.com", "8933333321", 1000, 1234);
+    Account account1 = new Account(null, "Barrack Obama", "barrack@gmail.com", "79822333321", 4000, 4321);
 
 
+    @BeforeEach
+    public void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
+    }
     @BeforeEach
     public void setUp(){
         mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
     }
+
     @Test
     void getAdminSettings() {
     }
@@ -49,8 +55,6 @@ class AccountControllerTest {
 
     @Test
     void shouldReturnOneAccountWhenCallGetAccountByEmail() throws Exception {
-
-
         when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/account/monthy@gmail.com"))
@@ -62,8 +66,6 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.balance").value(1000))
                 .andExpect(jsonPath("$.pin").value(1234))
                 .andReturn();
-
-
     }
 
     @Test
@@ -91,11 +93,22 @@ class AccountControllerTest {
 
     @Test
     void shouldReturnThousandValueWhenCallCheckBalance() throws Exception {
+
+        when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/account/balance")
+                        .param("email", "monthy@gmail.com"))
+                .andExpect(status().isOk());
+
+        assertEquals(1000, account.getBalance());
+
     }
 
     @Test
     void shouldCallCreateAccountOnceWhenCreateAccount() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/account/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"1000\",\"pin\": \"1234\" }"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"1000\",\"pin\": \"1234\" }"))
                 .andExpect(status().isOk());
@@ -107,14 +120,15 @@ class AccountControllerTest {
     void shouldCallCreateAccountWhenWithdrawMoney() throws Exception {
         double amount = 500;
         when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
-        account.setBalance(account.getBalance()-amount);
+
+        account.setBalance(account.getBalance() - amount);
         when(accountService.createAccount(account)).thenReturn(account);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/account/withdraw")
-                .param("email", "monthy@gmail.com")
-                .param("amount", String.valueOf(amount))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"500\",\"pin\": \"1234\" }"))
+                        .param("email", "monthy@gmail.com")
+                        .param("amount", String.valueOf(amount))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"500\",\"pin\": \"1234\" }"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.balance").value(account.getBalance()));
 
@@ -125,7 +139,8 @@ class AccountControllerTest {
     void shouldCallCreateAccountWhenDepositMoney() throws Exception {
         double amount = 800;
         when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
-        account.setBalance(account.getBalance()+amount);
+
+        account.setBalance(account.getBalance() + amount);
         when(accountService.createAccount(account)).thenReturn(account);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/account/deposit")
@@ -147,15 +162,14 @@ class AccountControllerTest {
         when(accountService.createAccount(account)).thenReturn(account);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/account/pin")
-                .param("email", "monthy@gmail.com")
-                .param("newPin", String.valueOf(pin))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"1800\",\"pin\": \"4567\" }"))
+                        .param("email", "monthy@gmail.com")
+                        .param("newPin", String.valueOf(pin))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"1800\",\"pin\": \"4567\" }"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.pin").value(account.getPin()));
 
-        verify(accountService,times(1)).createAccount(account);
-
+        verify(accountService, times(1)).createAccount(account);
     }
 
     @Test
@@ -165,24 +179,5 @@ class AccountControllerTest {
                 .param("email", "monthy@gmail.com"));
 
         verify(accountService, times(1)).deleteAccount("monthy@gmail.com");
-    }
-
-    void createAccount() {
-    }
-
-    @Test
-    void withdrawMoney() {
-    }
-
-    @Test
-    void depositMoney() {
-    }
-
-    @Test
-    void changePin() {
-    }
-
-    @Test
-    void deleteAccount() {
     }
 }
