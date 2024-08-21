@@ -36,7 +36,7 @@ public class AccountController {
     }
 
     @GetMapping("/balance")
-    public Double checkBalance (@RequestParam String email){
+    public double checkBalance (@RequestParam String email){
         log.info("Used check balance function");
         Account account = accountService.getAccount(email);
         return account.getBalance();

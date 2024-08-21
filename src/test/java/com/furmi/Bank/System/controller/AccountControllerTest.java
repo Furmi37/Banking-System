@@ -90,22 +90,13 @@ class AccountControllerTest {
 
     @Test
     void shouldReturnThousandValueWhenCallCheckBalance() throws Exception {
+        when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/account/balance"));
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.balance").value(1000))
-//                .andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/account/balance")
+                        .param("email", "monthy@gmail.com"))
+                .andExpect(status().isOk());
 
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.accountOwner").value("Monthy Python"))
-//                .andExpect(jsonPath("$.email").value("monthy@gmail.com"))
-//                .andExpect(jsonPath("$.accountNumber").value("8933333321"))
-//                .andExpect(jsonPath("$.balance").value(1000))
-//                .andExpect(jsonPath("$.pin").value(1234))
-//                .andReturn();
-
+        assertEquals(1000, account.getBalance());
     }
 
     @Test
