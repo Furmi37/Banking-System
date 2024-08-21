@@ -49,7 +49,6 @@ public class AccountController {
 
     @PutMapping("/withdraw")
     public Account withdrawMoney (@RequestParam String email, double amount){
-        log.info("Used withdraw withdraw");
         Account account = accountService.getAccount(email);
         if (account == null) {
             throw new RuntimeException("Account not found");
@@ -58,6 +57,8 @@ public class AccountController {
             throw new RuntimeException("You dont have enough money to withdraw");
         }
         account.setBalance(account.getBalance() - amount);
+        log.info("Used withdraw - on your account is left {}", account.getBalance());
+
         return accountService.createAccount(account);
     }
 
