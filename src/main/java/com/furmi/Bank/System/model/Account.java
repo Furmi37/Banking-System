@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -21,5 +23,8 @@ public class Account {
     private String accountNumber;
     private double balance;
     private int pin;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "email")
+    private List<SavingAccount> savingsAccounts;
 
 }
