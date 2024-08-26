@@ -1,6 +1,7 @@
 package com.furmi.Bank.System.controller;
 
 import com.furmi.Bank.System.model.Account;
+import com.furmi.Bank.System.model.SavingAccount;
 import com.furmi.Bank.System.service.AccountService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,14 @@ public class AccountController {
     @PostMapping("/create")
     public Account createAccount (@RequestBody Account account){
         log.info("Created account - {}", account.getAccountOwner());
+        return accountService.createAccount(account);
+    }
+
+    @PutMapping("/saving")
+    public Account createSavingAccount (@RequestParam String email, SavingAccount savingAccount){
+        Account account = accountService.getAccount(email);
+        log.info("Creating saving account for - {}", email);
+        account.getSavingsAccounts().add(savingAccount);
         return accountService.createAccount(account);
     }
 
