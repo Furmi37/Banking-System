@@ -1,6 +1,12 @@
 package com.furmi.Bank.System.model;
 
 import jakarta.persistence.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
 import lombok.*;
 
 @Entity
