@@ -1,6 +1,7 @@
 package com.furmi.Bank.System.controller;
 
 import com.furmi.Bank.System.model.Account;
+import com.furmi.Bank.System.model.SavingAccount;
 import com.furmi.Bank.System.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -32,8 +32,10 @@ class AccountControllerTest {
     private AccountController accountController;
     private MockMvc mockMvc;
 
-    Account account = new Account(null, "Monthy Python", "monthy@gmail.com", "8933333321", 1000, 1234);
-    Account account1 = new Account(null, "Barrack Obama", "barrack@gmail.com", "79822333321", 4000, 4321);
+    Account account = new Account(null, "Monthy Python", "monthy@gmail.com", "8933333321", 1000, 1234, null);
+    Account account1 = new Account(null, "Barrack Obama", "barrack@gmail.com", "79822333321", 4000, 4321,null);
+
+    SavingAccount savingAccount = new SavingAccount(1L,0.07,5000,account);
 
 
     @BeforeEach
@@ -107,6 +109,27 @@ class AccountControllerTest {
                 .andExpect(status().isOk());
 
         verify(accountService, times(1)).createAccount(eq(account));
+    }
+
+    @Test
+    void shouldCallCreateAccountOnceWhenCreateSavingAccount() throws Exception{
+        when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
+        SavingAccount savingAccount = new SavingAccount(1,0.07,5000,account);
+        account.getSavingsAccounts().add(savingAccount);
+        List<SavingAccount> savingAccounts = new ArrayList<>();
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/account/saving")
+                .param("email", "monthy@gmail.com")
+                .param("savingsAccount", savingAccount.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"500\",\"pin\": \"1234\","+
+                        "\"savingsAccounts\": {\"interestRate\":\"0.07\", \"payment\": \"5000\"}}"))
+                .andExpect(jsonPath("$.interestRate").value("0.07"))
+                .andExpect(jsonPath("$.payment").value("5000"))
+                .andExpect(jsonPath("$.email").value("monthy@gmail.com"))
+                .andExpect(status().isOk());
+
+        verify(accountService, times(1)).createAccount(account);
     }
 
     @Test
