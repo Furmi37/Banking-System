@@ -19,9 +19,10 @@ This project was made while I was learning programming.
 
 
 ### Features:
-Banking System Project - REST service. Service is authenticated, so to use it you need to register, then login. You can create account and make operations with it like: withdraw money, deposit, change account pin code, change your personal informations. Registered users and accounts are saved to database.
+Banking System Project - REST service. Service is authenticated, so to use it you need to register, then login. You can create account and make operations with it like: withdraw money, deposit, change account pin code, change your personal informations. Registered users and accounts are saved to database. Every REST endpoint has his own wrriten tests.
 
 ### Requirements:
 - Java [17]
 - Maven 
 - Postman
+- MySQLWorkbench
