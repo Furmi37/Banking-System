@@ -1,6 +1,7 @@
 package com.furmi.Bank.System.service;
 
 import com.furmi.Bank.System.model.Account;
+import com.furmi.Bank.System.model.SavingAccount;
 import com.furmi.Bank.System.repository.AccountRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class AccountService {
 //            throw new RuntimeException("This account doesnt have a owner yet");
 //        }
     }
+    public List<SavingAccount> getSavingAccounts (String email){return accountRepository.findAccountByEmail(email).getSavingsAccounts();}
 
     public List<Account> getAccounts() {
         return accountRepository.findAll();

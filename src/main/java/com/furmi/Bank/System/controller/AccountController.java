@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class AccountController {
-    AccountService accountService;
+    private AccountService accountService;
 
     @GetMapping("/admin/home")
     public String getAdminSettings(){
@@ -52,7 +52,8 @@ public class AccountController {
     public Account createSavingAccount (@RequestParam String email, SavingAccount savingAccount){
         Account account = accountService.getAccount(email);
         log.info("Creating saving account for - {}", email);
-        account.getSavingsAccounts().add(savingAccount);
+        List<SavingAccount> savingAccounts = accountService.getSavingAccounts(email);
+        savingAccounts.add(savingAccount);
         return accountService.createAccount(account);
     }
 
