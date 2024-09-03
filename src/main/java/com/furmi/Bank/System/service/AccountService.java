@@ -22,11 +22,6 @@ public class AccountService {
 
     public Account getAccount(String email) {
         return  accountRepository.findAccountByEmail(email);
-//        if (account != null) {
-//            return account;
-//        } else {
-//            throw new RuntimeException("This account doesnt have a owner yet");
-//        }
     }
     public List<SavingAccount> getSavingAccounts (String email){return accountRepository.findAccountByEmail(email).getSavingsAccounts();}
 

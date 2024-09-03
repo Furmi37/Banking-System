@@ -71,6 +71,13 @@ public class AccountController {
 
         return accountService.createAccount(account);
     }
+    @PutMapping("/loan")
+    public Account loanMoney(@RequestParam String email, double loanAmount){
+        Account account = accountService.getAccount(email);
+        account.setBalance(account.getBalance() + loanAmount);
+
+        return accountService.createAccount(account);
+    }
 
     @PutMapping("/deposit")
     public Account depositMoney (@RequestParam String email, double amount){
