@@ -33,15 +33,16 @@ class AccountControllerTest {
     private MockMvc mockMvc;
 
     Account account = new Account(null, "Monthy Python", "monthy@gmail.com", "8933333321", 1000, 1234, null);
-    Account account1 = new Account(null, "Barrack Obama", "barrack@gmail.com", "79822333321", 4000, 4321,null);
+    Account account1 = new Account(null, "Barrack Obama", "barrack@gmail.com", "79822333321", 4000, 4321, null);
 
-    SavingAccount savingAccount = new SavingAccount(1L,0.07,5000,account);
+    SavingAccount savingAccount = new SavingAccount(1L, 0.07, 5000, account);
 
 
     @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
     }
+
     @Test
     void getAdminSettings() {
     }
@@ -68,7 +69,7 @@ class AccountControllerTest {
     @Test
     void shouldReturnTwoAccountsWhenCallGetAll() throws Exception {
 
-        List<Account> list = List.of(account,account1);
+        List<Account> list = List.of(account, account1);
         when(accountService.getAccounts()).thenReturn(list);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/account/all"))
@@ -112,9 +113,9 @@ class AccountControllerTest {
     }
 
     @Test
-    void shouldCallCreateAccountOnceWhenCreateSavingAccount() throws Exception{
+    void shouldCallCreateAccountOnceWhenCreateSavingAccount() throws Exception {
 
-        SavingAccount savingAccount = new SavingAccount(1L,0.07,5000,account);
+        SavingAccount savingAccount = new SavingAccount(1L, 0.07, 5000, account);
         List<SavingAccount> savingsAccounts = new ArrayList<>();
         savingsAccounts.add(savingAccount);
         Account account = new Account(null, "Monthy Python", "monthy@gmail.com", "8933333321", 1000, 1234, savingsAccounts);
@@ -124,11 +125,11 @@ class AccountControllerTest {
         when(accountService.createAccount(account)).thenReturn(account);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/account/saving")
-                .param("email", "monthy@gmail.com")
-                .param("savingsAccount", savingAccount.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"500\",\"pin\": \"1234\","+
-                        "\"savingsAccounts\": {\"interestRate\":\"0.07\", \"payment\": \"5000\"}}"))
+                        .param("email", "monthy@gmail.com")
+                        .param("savingsAccount", savingAccount.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"500\",\"pin\": \"1234\"," +
+                                "\"savingsAccounts\": {\"interestRate\":\"0.07\", \"payment\": \"5000\"}}"))
                 .andExpect(status().isOk());
 
         verify(accountService, times(1)).createAccount(account);
@@ -151,6 +152,25 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.balance").value(account.getBalance()));
 
         verify(accountService, times(1)).createAccount(account);
+    }
+
+    @Test
+    void shouldCallCreateAccountOnceWhenLoanMoney() throws Exception {
+        double loanAmount = 5000;
+        when(accountService.getAccount("monthy@gmail.com")).thenReturn(account);
+
+        account.setBalance(account.getBalance() + loanAmount);
+        when(accountService.createAccount(account)).thenReturn(account);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/account/loan")
+                        .param("email", "monthy@gmail.com")
+                        .param("loanAmount", String.valueOf(loanAmount))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"accountOwner\":\"Monthy Python\",\"email\": \"monthy@gmail.com\",\"accountNumber\": \"8933333321\",\"balance\":\"5500\",\"pin\": \"1234\" }"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.balance").value(account.getBalance()));
+
+        verify(accountService,times(1)).createAccount(account);
     }
 
     @Test
